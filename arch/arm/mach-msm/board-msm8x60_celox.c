@@ -692,8 +692,8 @@ static struct regulator_init_data saw_s0_init_data = {
 		.constraints = {
 			.name = "8901_s0",
 			.valid_ops_mask = REGULATOR_CHANGE_VOLTAGE,
-			.min_uV = 800000,
-			.max_uV = 1325000,
+			.min_uV = 700000,
+			.max_uV = 1350000,
 		},
 		.consumer_supplies = vreg_consumers_8901_S0,
 		.num_consumer_supplies = ARRAY_SIZE(vreg_consumers_8901_S0),
@@ -703,8 +703,8 @@ static struct regulator_init_data saw_s1_init_data = {
 		.constraints = {
 			.name = "8901_s1",
 			.valid_ops_mask = REGULATOR_CHANGE_VOLTAGE,
-			.min_uV = 800000,
-			.max_uV = 1325000,
+			.min_uV = 700000,
+			.max_uV = 1350000,
 		},
 		.consumer_supplies = vreg_consumers_8901_S1,
 		.num_consumer_supplies = ARRAY_SIZE(vreg_consumers_8901_S1),
@@ -8273,7 +8273,12 @@ static unsigned int msm_adc_gpio_configure_expander_enable(void)
 
 	printk(KERN_DEBUG "Enter msm_adc_gpio_configure_expander_enable\n");
 
-	vreg_adc_epm1 = regulator_get(NULL, "8058_s3");
+/* RPM early regulator constraints */
+static struct rpm_regulator_init_data rpm_regulator_early_init_data[] = {
+	/*	 ID       a_on pd ss min_uV   max_uV   init_ip    freq */
+	RPM_SMPS(PM8058_S0, 0, 1, 1,  500000, 1350000, SMPS_HMIN, 1p60),
+	RPM_SMPS(PM8058_S1, 0, 1, 1,  500000, 1350000, SMPS_HMIN, 1p60),
+};
 
 	if (IS_ERR(vreg_adc_epm1)) {
 		printk(KERN_ERR "%s: Unable to get 8058_s3\n", __func__);
